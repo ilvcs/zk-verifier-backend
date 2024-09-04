@@ -1,0 +1,23 @@
+{
+  "@context": [
+    {
+      "@protected": true,
+      "@version": 1.1,
+      "id": "@id",
+      "type": "@type",
+      "graduationcertificate": {
+        "@context": {
+          "@propagate": true,
+          "@protected": true,
+          "polygon-vocab": "urn:uuid:faad9cc1-e86c-4b10-bdd4-4d2512be061c#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "isGraduated": {
+            "@id": "polygon-vocab:isGraduated",
+            "@type": "xsd:boolean"
+          }
+        },
+        "@id": "urn:uuid:4dcd90fa-3d1a-4518-9989-7bb7ac408801"
+      }
+    }
+  ]
+}

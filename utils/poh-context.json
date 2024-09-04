@@ -1,0 +1,23 @@
+{
+  "@context": [
+    {
+      "@protected": true,
+      "@version": 1.1,
+      "id": "@id",
+      "type": "@type",
+      "pohcheck": {
+        "@context": {
+          "@propagate": true,
+          "@protected": true,
+          "polygon-vocab": "urn:uuid:8d04c83a-89da-44f3-beed-ec5c1e5ec527#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "human": {
+            "@id": "polygon-vocab:human",
+            "@type": "xsd:boolean"
+          }
+        },
+        "@id": "urn:uuid:4306883a-37d8-4cee-a90f-1ba2a3d298e6"
+      }
+    }
+  ]
+}

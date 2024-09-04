@@ -62,7 +62,7 @@ app.get("/api/status", async (req, res) => {
 	return res
 		.status(200)
 		.set("Content-Type", "application/json")
-		.send(authResponse);
+		.send(JSON.stringify(authResponse));
 });
 
 // @ts-ignore
@@ -76,7 +76,7 @@ const server = app.listen(port, () => {
 	console.log(`Server started at http://localhost:${port}`);
 });
 
-server.setTimeout(20000); // Set
+server.setTimeout(50000); // Set
 
 async function getAuthRequest(req, res) {
 	// Public facing url of the server
@@ -100,13 +100,13 @@ async function getAuthRequest(req, res) {
 
 	const proofRequest = {
 		circuitId: "credentialAtomicQuerySigV2",
-		id: 1,
+		id: 1725432751,
 		query: {
 			allowedIssuers: ["*"],
-			context: "ipfs://QmVbLKTgEod2sjmY9P6zXYNUMsxs9NTrpxxH5Ba6hdmksr",
-			type: "POH",
+			context: "https://ilvcs.github.io/JsonHosting/poh-context.json",
+			type: "pohcheck",
 			credentialSubject: {
-				isHuman: {
+				human: {
 					$eq: true,
 				},
 			},
@@ -146,21 +146,17 @@ async function getQueryRequest(req, res) {
 	const uri = `${hostUrl}${callbackUrl}?sessionId=${sessionId}`;
 
 	// Genarate request for basic auth
-	const request = auth.createAuthorizationRequest(
-		"Basic Test Auth",
-		audience,
-		uri,
-	);
+	const request = auth.createAuthorizationRequest("Query Auth", audience, uri);
 
 	request.id = "7f38a193-0918-4a48-9fac-36adfdb8b543";
 	request.thid = "7f38a193-0918-4a48-9fac-36adfdb8b543";
 
 	const proofRequest = {
 		circuitId: "credentialAtomicQuerySigV2",
-		id: 2,
+		id: 1725436217,
 		query: {
 			allowedIssuers: ["*"],
-			context: "ipfs://QmXhUBrzNhHr5mWdXEvSZ6TaHXam4wJhCk5qJauUC8hw83",
+			context: "https://ilvcs.github.io/JsonHosting/graduation-context.json",
 			type: "graduationcertificate",
 			credentialSubject: {
 				isGraduated: {
@@ -177,7 +173,10 @@ async function getQueryRequest(req, res) {
 	// Store auth request in map associated with session ID
 	requestMap.set(`${sessionId}`, request);
 
-	return res.status(200).set("Content-Type", "application/json").send(request);
+	return res
+		.status(200)
+		.set("Content-Type", "application/json")
+		.send(JSON.stringify(request));
 }
 
 async function Callback(req, res) {
@@ -190,7 +189,7 @@ async function Callback(req, res) {
 	// get JWZ token parms from the post request
 	const rawBody = await getRawBody(req);
 	const tokenString = rawBody.toString().trim();
-	console.log("Token string: ", tokenString);
+	//console.log("Token string: ", tokenString);
 
 	// Fethch auth request from session ID
 	const authRequest = requestMap.get(sessionId);
@@ -210,6 +209,8 @@ async function Callback(req, res) {
 			acceptedStateTransitionDelay: 5 * 60 * 1000, // 5 minute
 		};
 		authResponse = await verifier.fullVerify(tokenString, authRequest, opts);
+		// @ts-ignore
+		authResponse.body.message = tokenString;
 		// Store the auth response in the map associated with the session ID
 		responseMap.set(sessionId, authResponse);
 		console.log(`Auth Response: ${JSON.stringify(authResponse)}`);
