@@ -14,8 +14,15 @@ const LINEA_SEPOLIA_STATE_RESOLVER = new resolver.EthStateResolver(
 	process.env.SEPOLIA_STATE_CONTRACT_ADDRESS,
 );
 
+const PRIVADO_ID_STATE_RESOLVER = new resolver.EthStateResolver(
+	// @ts-ignore
+	process.env.PRIVADO_ID_JSON_RPC_URL,
+	process.env.PRIVADO_ID_STATE_CONTRACT_ADDRESS,
+);
+
 const resolvers = {
 	["linea:sepolia"]: LINEA_SEPOLIA_STATE_RESOLVER,
+	["privado:main"]: PRIVADO_ID_STATE_RESOLVER,
 };
 
 const app = express();
