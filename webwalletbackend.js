@@ -14,6 +14,12 @@ const LINEA_SEPOLIA_STATE_RESOLVER = new resolver.EthStateResolver(
 	process.env.SEPOLIA_STATE_CONTRACT_ADDRESS,
 );
 
+const AMOY_STATE_RESOLVER = new resolver.EthStateResolver(
+	// @ts-ignore
+	JSON_RPC_URL,
+	process.env.STATE_CONTRACT_ADDRESS,
+);
+
 const PRIVADO_ID_STATE_RESOLVER = new resolver.EthStateResolver(
 	// @ts-ignore
 	process.env.PRIVADO_ID_JSON_RPC_URL,
@@ -21,8 +27,16 @@ const PRIVADO_ID_STATE_RESOLVER = new resolver.EthStateResolver(
 );
 
 const resolvers = {
-	["linea:sepolia"]: LINEA_SEPOLIA_STATE_RESOLVER,
-	["privado:main"]: PRIVADO_ID_STATE_RESOLVER,
+	["sepolia:linea"]: LINEA_SEPOLIA_STATE_RESOLVER,
+	["polygon:amoy"]: AMOY_STATE_RESOLVER,
+	["privado:main"]: new resolver.EthStateResolver(
+		"https://rpc-mainnet.privado.id",
+		"0x975556428F077dB5877Ea2474D783D6C69233742",
+	),
+	["privado:test"]: new resolver.EthStateResolver(
+		"https://rpc-testnet.privado.id/",
+		"0x975556428F077dB5877Ea2474D783D6C69233742",
+	),
 };
 
 const app = express();
@@ -120,7 +134,7 @@ async function getAuthRequest(req, res) {
 		callbackUrl: uri,
 		verifierDid: audience,
 	};
-	console.log("Request: ", proofRequest);
+	//console.log("Request: ", proofRequest);
 
 	const scope = request.body.scope ?? [];
 	request.body.scope = [...scope, proofRequest];
@@ -128,7 +142,7 @@ async function getAuthRequest(req, res) {
 	// Store auth request in map associated with session ID
 	requestMap.set(`${sessionId}`, request);
 	const queryHash = await getWebWalletQueryHash(quryRequest);
-	console.log("Query hash: ", queryHash);
+	//console.log("Query hash: ", queryHash);
 	const queryUrl = `https://wallet-dev.privado.id/#${queryHash}`;
 
 	try {
@@ -162,6 +176,9 @@ async function Callback(req, res) {
 	if (!authRequest) {
 		return res.status(400).send("Invalid session ID");
 	}
+
+	console.log("resolvers", resolvers);
+	console.log("Auth Request: ", authRequest);
 
 	// exicute the auth request
 	const verifier = await auth.Verifier.newVerifier({
