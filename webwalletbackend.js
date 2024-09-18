@@ -7,12 +7,7 @@ const { auth, resolver, protocol } = require("@iden3/js-iden3-auth");
 const getRawBody = require("raw-body");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-const JSON_RPC_URL = process.env.SEPOLIA_JSON_RPC_URL;
-const LINEA_SEPOLIA_STATE_RESOLVER = new resolver.EthStateResolver(
-	// @ts-ignore
-	JSON_RPC_URL,
-	process.env.SEPOLIA_STATE_CONTRACT_ADDRESS,
-);
+const JSON_RPC_URL = process.env.JSON_RPC_URL;
 
 const AMOY_STATE_RESOLVER = new resolver.EthStateResolver(
 	// @ts-ignore
@@ -20,14 +15,7 @@ const AMOY_STATE_RESOLVER = new resolver.EthStateResolver(
 	process.env.STATE_CONTRACT_ADDRESS,
 );
 
-const PRIVADO_ID_STATE_RESOLVER = new resolver.EthStateResolver(
-	// @ts-ignore
-	process.env.PRIVADO_ID_JSON_RPC_URL,
-	process.env.PRIVADO_ID_STATE_CONTRACT_ADDRESS,
-);
-
 const resolvers = {
-	["sepolia:linea"]: LINEA_SEPOLIA_STATE_RESOLVER,
 	["polygon:amoy"]: AMOY_STATE_RESOLVER,
 	["privado:main"]: new resolver.EthStateResolver(
 		"https://rpc-mainnet.privado.id",
@@ -177,13 +165,14 @@ async function Callback(req, res) {
 		return res.status(400).send("Invalid session ID");
 	}
 
-	console.log("resolvers", resolvers);
-	console.log("Auth Request: ", authRequest);
+	// console.log("resolvers", resolvers);
+	// console.log("Auth Request: ", authRequest);
 
 	// exicute the auth request
 	const verifier = await auth.Verifier.newVerifier({
 		stateResolver: resolvers,
 		circuitsDir: path.join(__dirname, "./keys"),
+		ipfsGatewayURL: "https://ipfs.io",
 	});
 
 	let authResponse;
