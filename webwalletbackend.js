@@ -115,7 +115,7 @@ async function getAuthRequest(req, res) {
 	};
 	const quryRequest = {
 		backUrl: "https://my-app.org/back",
-		finishUrl: "https://my-app.org/finish",
+		finishUrl: "https://www.privado.id/",
 		logoUrl: "https://my-app.org/logo.png",
 		name: "My app",
 		zkQueries: [{ ...proofRequest }],
