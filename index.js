@@ -156,6 +156,32 @@ async function getAuthRequest(req, res) {
 		},
 	};
 
+	// const proofRequest = {
+	// 	circuitId: "credentialAtomicQueryV3-beta.1",
+	// 	id: 1725432751,
+	// 	query: {
+	// 		allowedIssuers: ["*"],
+	// 		context: "https://ilvcs.github.io/JsonHosting/poh-context.json",
+	// 		type: "pohcheck",
+	// 		credentialSubject: {
+	// 			human: {},
+	// 		},
+	// 	},
+	// };
+
+	// const proofRequest = {
+	// 	circuitId: "credentialAtomicQueryV3-beta.1",
+	// 	id: Date.now(),
+	// 	query: {
+	// 		allowedIssuers: ["*"],
+	// 		context: "ipfs://QmNf693mitVCKjMjdnCJFAZwhztUHupX94ggkHS9ykpD3W",
+	// 		type: "DriversLicense",
+	// 		credentialSubject: {
+	// 			ClassA: {},
+	// 		},
+	// 	},
+	// };
+
 	console.log(
 		"\x1b[32m%s\x1b[0m",
 		"Generated Proof Request:",
@@ -228,6 +254,19 @@ async function getQueryRequest(req, res) {
 		},
 	};
 
+	// const proofRequest = {
+	// 	circuitId: "credentialAtomicQueryV3-beta.1",
+	// 	id: Date.now(),
+	// 	query: {
+	// 		allowedIssuers: ["*"],
+	// 		context: "ipfs://QmNf693mitVCKjMjdnCJFAZwhztUHupX94ggkHS9ykpD3W",
+	// 		type: "DriversLicense",
+	// 		credentialSubject: {
+	// 			ClassA: {},
+	// 		},
+	// 	},
+	// };
+
 	console.log(
 		"\x1b[32m%s\x1b[0m",
 		"Generated Proof Request:",
@@ -283,6 +322,7 @@ async function Callback(req, res) {
 	const verifier = await auth.Verifier.newVerifier({
 		stateResolver: resolvers,
 		circuitsDir: path.join(__dirname, "./keys"),
+		ipfsGatewayURL: "https://ipfs.io",
 	});
 
 	let authResponse;
